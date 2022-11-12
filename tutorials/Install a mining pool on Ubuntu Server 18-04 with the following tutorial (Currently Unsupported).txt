@@ -1,0 +1,229 @@
+Install a mining pool on Ubuntu Server 18-04 with the following tutorial (Currently Unsupported)
+
+Install a mining pool on Ubuntu Server 18.04 with the following tutorial.
+
+Update your Ubuntu server with the following command:
+
+sudo apt-get update && sudo apt-get upgrade -y
+
+Install the required dependencies with the following command:
+
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils python3 libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libboost-all-dev libboost-program-options-dev -y
+
+Install the additional dependencies with the following command:
+
+sudo apt-get install libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler unzip software-properties-common redis-server npm git nano cmake screen -y
+
+Install the repository ppa:bitcoin/bitcoin with the following command:
+
+sudo add-apt-repository ppa:bitcoin/bitcoin
+
+Confirm the installation of the repository by pressing on the enter key. enter
+
+Install Berkeley DB with the following command:
+
+sudo apt-get update && sudo apt-get install libdb4.8-dev libdb4.8++-dev -y
+
+Download the Linux daemon for your wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-daemon-linux.tar.gz" -O ongocoin-daemon-linux.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf ongocoin-daemon-linux.tar.gz
+
+Download the Linux tools for your wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-qt-linux.tar.gz" -O ongocoin-qt-linux.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf ongocoin-qt-linux.tar.gz
+
+Type the following command to install the daemon and tools for your wallet:
+
+sudo mv ongocoind ongocoin-cli ongocoin-tx /usr/bin/
+
+Type the following command to open your home directory:
+
+cd $HOME
+
+Create the data directory for your coin with the following command:
+
+mkdir $HOME/.ongocoin
+
+Open nano.
+
+nano $HOME/.ongocoin/ongocoin.conf -t
+
+Paste the following into nano.
+
+rpcuser=rpc_ongocoin
+rpcpassword=dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2
+rpcbind=0.0.0.0
+rpcallowip=127.0.0.1
+listen=1
+server=1
+txindex=1
+daemon=1
+paytxfee=0.0002
+deprecatedrpc=accounts
+addresstype=legacy
+addnode=node2.walletbuilders.com
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Type the following command to start your daemon:
+
+ongocoind
+
+Type the following command to create a new receiving address for your daemon:
+
+ongocoin-cli getnewaddress ""
+
+Example output.
+
+4UyrFQrAoNQMEMqNhZTareRmjeU68bLiop
+
+Type the following commands to install NOMP:
+
+git clone https://github.com/walletbuilders/node-open-mining-portal.git nomp
+cd nomp
+npm update
+
+Type the following command to download the update for for the algorithm X11:
+
+wget https://raw.githubusercontent.com/walletbuilders/nomp-x11-stratum-patch/master/nomp_x11_stratum_patch.diff
+
+Type the following command to update the stratum-pool module for the algorithm X11:
+
+patch -p1 < nomp_x11_stratum_patch.diff
+
+Type the following command to create the file settings.json:
+
+cp config_example.json config.json
+
+Open nano.
+
+nano config.json -t
+
+Modify the following values in the file config.json.
+
+host - Change the value “0.0.0.0” with the IPv4 address of your server.
+
+stratumHost - Change the value “cryppit.com” with the IPv4 address of your server.
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Type the following commands to create the config file for your coin:
+
+cd coins
+cp darkcoin.json ongocoin.json
+
+Open nano.
+
+nano ongocoin.json -t
+
+Modify the following values in the file ongocoin.json.
+
+name - “Darkcoin” -> “OngoCoin”.
+
+symbol - “DRK” -> “ONGO”.
+
+Save the file with the keyboard combination ctrl + x.
+
+Type the following commands to create the config file for your pool:
+
+cd ../pool_configs
+cp litecoin_example.json ongocoin_pool.json
+
+Open nano.
+
+nano ongocoin_pool.json -t
+
+Modify the following values in the file ongocoin.json.
+
+enabled - “false” -> “true”.
+
+coin - “litecoin.json” -> “ongocoin.json”.
+
+address - “n4jSe18kZMCdGcZqaYprShXW6EH1wivUK1” -> Receiving address from the RPC command “getaccountaddress ""”.
+
+rewardRecipients - Remove all recipients.
+
+minimumPayment - “70” -> “0.01”.
+
+"paymentProcessing" -> port - “19332” -> “9345”.
+
+"paymentProcessing" -> user - “testuser” -> “rpc_ongocoin”.
+
+"paymentProcessing" -> password - “testpass” -> “dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2”.
+
+"daemons" -> port - “19332” -> “9345”.
+
+"daemons" -> user - “testuser” -> “rpc_ongocoin”.
+
+"daemons" -> password - “testpass” -> “dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2”.
+
+p2p - “true” -> “false”.
+
+3008 -> diff - “8” -> “0.01”.
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Type the following command to open a screen session:
+
+screen
+
+Type the following commands to start your mining pool:
+
+cd $HOME/nomp
+sudo node init.js
+
+Press the keyboard shortcut ctrl + a + d to disconnect from your screen session.
+
+
+Instructions to mine with your mining pool.
+
+Open your wallet.
+
+Go to Tools -> Debug console.
+This is the console where you execute RPC commands.
+
+Type the following command, to create a legacy receiving address for your miner:
+
+getnewaddress "" "legacy"
+
+Example output.
+
+4UyrFQrAoNQMEMqNhZTareRmjeU68bLiop
+
+Click here to download cpuminer-multi and extract the zip file.
+
+Open "Run" with the keyboard shortcut winkey + r.
+
+Enter the following text behind "Open": notepad
+
+Press on the button "OK".
+
+Modify the following values in the following text.
+
+cpuminer-gw64-corei7.exe -a x11 -o stratum+tcp://203.0.113.53:3008 -u 4UyrFQrAoNQMEMqNhZTareRmjeU68bLiop -p anything
+
+203.0.113.53 - “203.0.113.53” -> IPv4 address of your VPS.
+
+4UyrFQrAoNQMEMqNhZTareRmjeU68bLiop - “TP56yqPtRTkse49B96sHzo2B6v48MV24vP” -> Receiving address from the RPC command “getnewaddress” for your miner.
+
+Paste the modified text into notepad.
+
+Click on the menu item "File" -> "Save As...".
+
+The Open dialog box will appear, click on "Save as type" and select the option "All Files (*.*)".
+
+Enter the following text behind "File name": mine.bat
+
+Click on the menu bar, open the directory where you extracted pooler-cpuminer-2.5.0-win64.zip and press on the enter key. enter
+
+Press on the button "Save".
+
+Execute mine.bat to mine with your mining pool.

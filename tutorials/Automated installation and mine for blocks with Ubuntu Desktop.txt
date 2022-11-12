@@ -1,0 +1,15 @@
+Automated installation and mine for blocks with Ubuntu Desktop
+
+Open a Terminal window.
+
+Make the install file executable with the following command:
+
+chmod +x $HOME/Downloads/ongocoin-auto.sh
+
+Make .sh files executable with the following command:
+
+gsettings set org.gnome.nautilus.preferences executable-text-activation 'ask'
+
+Open Files and go to your Downloads directory.
+
+Open ongocoin-auto.sh and press "Run in Terminal" to automatically install your wallet and mine your first block.

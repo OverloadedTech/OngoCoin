@@ -1,0 +1,257 @@
+Install a web wallet on Ubuntu Server 18-04 with the following tutorial (Currenctly Unsupported)
+
+Install a web wallet on Ubuntu Server 18.04 with the following tutorial.
+
+Update your Ubuntu server with the following command:
+
+sudo apt-get update && sudo apt-get upgrade -y
+
+Install the required dependencies with the following command:
+
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils python3 libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libboost-all-dev libboost-program-options-dev libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler libqrencode-dev unzip software-properties-common git screen -y
+
+Install the repository ppa:bitcoin/bitcoin with the following command:
+
+sudo add-apt-repository ppa:bitcoin/bitcoin
+
+Confirm the installation of the repository by pressing on the enter key. enter
+
+Install Berkeley DB with the following command:
+
+sudo apt-get update && sudo apt-get install libdb4.8-dev libdb4.8++-dev -y
+
+Download the Linux daemon for your wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-daemon-linux.tar.gz" -O ongocoin-daemon-linux.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf ongocoin-daemon-linux.tar.gz
+
+Download the Linux tools for your wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-qt-linux.tar.gz" -O ongocoin-qt-linux.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf ongocoin-qt-linux.tar.gz
+
+Type the following command to install the daemon and tools for your wallet:
+
+sudo mv ongocoind ongocoin-cli ongocoin-tx /usr/bin/
+
+Create the data directory for your coin with the following command:
+
+mkdir $HOME/.ongocoin
+
+Open nano.
+
+nano $HOME/.ongocoin/ongocoin.conf -t
+
+Paste the following into nano.
+
+rpcuser=rpc_ongocoin
+rpcpassword=dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2
+rpcbind=0.0.0.0
+rpcallowip=127.0.0.1
+listen=1
+server=1
+txindex=1
+daemon=1
+paytxfee=0.0002
+deprecatedrpc=accounts
+addresstype=legacy
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Type the following command to start your daemon:
+
+ongocoind
+
+Type the following command to create a new receiving address for your daemon:
+
+ongocoin-cli getnewaddress ""
+
+Example output.
+
+4UyrFQrAoNQMEMqNhZTareRmjeU68bLiop
+
+Install the repository ppa:ondrej/php with the following command:
+
+sudo add-apt-repository -y ppa:ondrej/php
+
+Confirm the installation of the repository by pressing on the enter key. enter
+
+Install PHP 5.6 with the following command:
+
+sudo apt-get update && sudo apt-get install git apache2 php5.6 php5.6-mysql php5.6-gd libapache2-mod-php5.6 mysql-server -y
+
+Type the following commands to clone piWallet:
+
+git clone https://github.com/walletbuilders/piWallet
+
+Type the following command to copy piWallet to the directory /var/www:
+
+sudo mv piWallet/* /var/www/html/
+
+Type the following command to open MySQL:
+
+mysql
+
+Type the following command to create a MySQL database named “wallet”:
+
+CREATE DATABASE wallet;
+
+Type the following command to create a MySQL user named “wallet_user”:
+
+CREATE USER 'wallet_user'@'localhost' IDENTIFIED BY 'Ee4cxBN6VaThkAr4fKigzWR7veDPZlvU1dVzYg4H';
+
+Grant the MySQL user named “wallet_user” rights to the database named “wallet”:
+
+GRANT ALL PRIVILEGES ON wallet.* TO 'wallet_user'@'localhost';
+
+Type the following command to open the database named “wallet”:
+
+USE wallet;
+
+Paste the content of the file users.sql into the console of MySQL.
+
+Type the following command to close MySQL:
+
+exit
+
+Open a web browser on your computer and go to the following page https://www.google.com/recaptcha
+
+Login with your Google account.
+
+Click on the plus sign to register a new site.
+
+Register new site Google reCAPTCHA
+
+Fill-in the form.
+
+Label - Label to identify your site.
+
+reCAPTCHA type - Select the option “reCAPTCHA v2”.
+
+Domains - Subdomain/domain for your web wallet.
+
+Accept the reCAPTCHA Terms of Service and click on the button “submit” to register your site.
+Your reCAPTCHA site and secret key will be visible when the site is registered.
+
+Example reCAPTCHA keys.
+
+Google reCAPTCHA example keys
+
+
+Create the the file settings.php.
+
+sudo cp /var/www/html/settings-example.php /var/www/html/settings.php
+
+Open nano.
+
+sudo nano /var/www/html/settings.php -t
+
+Modify the following values in the file settings.php.
+
+$db_user - “root” -> “wallet_user”.
+
+$db_pass - “password” -> “Ee4cxBN6VaThkAr4fKigzWR7veDPZlvU1dVzYg4H”.
+
+$rpc_port - “8332” -> “9345”.
+
+$rpc_user - “bitcoinrpc” -> “rpc_ongocoin”.
+
+$rpc_pass - “Cp68nBkCAADKkskaKSskaDKdmSYLtLJ” -> “dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2”.
+
+$fullname - “Bitcoin” -> “OngoCoin”.
+
+$short - “BTC” -> “ONGO”.
+
+$blockchain_tx_url - Replace the value “http://blockchain.info/tx/” with the URL of your block explorer.
+
+$support - Replace the value “support@yourwebsite.com” with your support email address.
+
+$donation_address - Enter the receiving address from the RPC command “getnewaddress”.
+
+$public - “Recaptcha_publickey_here” replace with your reCAPTCHA site key.
+
+$secret - “Recaptcha_privatekey_here” replace with your reCAPTCHA secret key.
+
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Install the repository ppa:certbot/certbot (Let’s Encrypt) with the following command:
+
+sudo add-apt-repository universe && sudo add-apt-repository ppa:certbot/certbot
+
+Confirm the installation of the repository by pressing on the enter key. enter
+
+Install certbot with the following command:
+
+sudo apt-get update && sudo apt-get install certbot python-certbot-apache -y
+
+Install a SSL certificate for your web wallet.
+
+sudo certbot --apache
+
+Enter your support email address.
+
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to cancel):
+
+support@example.com
+
+Agree with the Let's Encrypt Terms of Service.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf. You must
+agree in order to register with the ACME server at
+https://acme-v02.api.letsencrypt.org/directory
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(A)gree/(C)ancel:
+
+Press the a and enter key to agree with the Terms of Service.
+
+
+Agree to share your email address with Let's Encrypt.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Would you be willing to share your email address with the Electronic Frontier
+Foundation, a founding partner of the Let's Encrypt project and the non-profit
+organization that develops Certbot? We'd like to send you email about our work
+encrypting the web, EFF news, campaigns, and ways to support digital freedom.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o:
+
+Press the n and enter key to not share your email address.
+
+
+Enter the hostname to access your web wallet.
+
+No names were found in your configuration files. Please enter in your domain name(s) (comma and/or space separated) (Enter 'c' to cancel):
+
+wallet.example.com
+
+Redirect HTTP traffic to HTTPS.
+
+Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: No redirect - Make no further changes to the webserver configuration.
+2: Redirect - Make all requests redirect to secure HTTPS access. Choose this for
+new sites, or if you're confident your site works on HTTPS. You can undo this
+change by editing your web server's configuration.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel):
+
+Press the 2 and enter key to redirect HTTP traffic to HTTPS.
+
+
+Remove the default index.html file with the following command:
+
+sudo rm /var/www/html/index.html
+
+The default admin credentials are:
+
+Username - piWallet
+Password - changeme

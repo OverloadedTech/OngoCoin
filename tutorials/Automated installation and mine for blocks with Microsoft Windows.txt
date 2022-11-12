@@ -1,0 +1,5 @@
+Automated installation and mine for blocks with Microsoft Windows
+
+Extract the zip file ongocoin-auto.zip
+
+Execute install.bat to automatically install your wallet and mine your first block.

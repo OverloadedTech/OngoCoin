@@ -1,0 +1,86 @@
+Mine for blocks with macOS (Curently Unsupported)
+
+Mine for blocks with your macOS wallet and the following instructions.
+
+Open Spotlight Search and type the following:
+
+terminal
+
+Double click on terminal.
+
+Execute the following command, to open your downloads directory:
+
+cd Downloads
+
+Install Homebrew with the following command:
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+Enter your sudo password to install Homebrew.
+
+Install wget with the following command:
+
+brew install wget
+
+Download your macOS wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-qt.dmg" -O ongocoin-qt.dmg
+
+Download the macOS tools for your wallet with the following command:
+
+wget "https://dl.walletbuilders.com/download?customer=d135531935d1d5775f302b4906a10552810a488f1734462d1d&filename=ongocoin-tools-macos.tar.gz" -O ongocoin-tools-macos.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf ongocoin-tools-macos.tar.gz
+
+Create the data directory for your coin with the following command:
+
+mkdir "$HOME/Library/Application Support/OngoCoin/"
+
+Open nano.
+
+nano "$HOME/Library/Application Support/OngoCoin/ongocoin.conf" -t
+
+Paste the following into nano.
+
+rpcuser=rpc_ongocoin
+rpcpassword=dR2oBQ3K1zYMZQtJFZeAerhWxaJ5Lqeq9J2
+rpcbind=0.0.0.0
+rpcallowip=127.0.0.1
+listen=1
+server=1
+addnode=node2.walletbuilders.com
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Open nano.
+
+nano mine.sh -t
+
+Paste the following into nano.
+
+#!/bin/bash
+SCRIPT_PATH=`pwd`;
+cd $SCRIPT_PATH
+echo Press [CTRL+C] to stop mining.
+while :
+do
+./ongocoin-cli generatetoaddress 1 $(./ongocoin-cli getnewaddress)
+done
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Make the file executable.
+
+chmod +x mine.sh
+
+Open your downloads directory in Finder.
+
+Install your macOS wallet with the file ongocoin-qt.dmg.
+
+Open your wallet.
+
+Go back to your terminal and execute the following command to mine your first block:
+
+./mine.sh
