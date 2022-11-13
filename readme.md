@@ -1,5 +1,5 @@
 # OngoCoin
-# Since 13 October 2022
+# Since 12 November 2022
 
 # What is it?
 Is a new cryptocurrency based on the Bitcoin Protocol and the X11 Protocol
