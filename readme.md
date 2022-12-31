@@ -35,9 +35,9 @@ Block halving
 Coin supply
 8000000 coins
 Website URL
-https://github.com/OngoCoin/OngoCoin
+https://github.com/OverloadedTech/OngoCoin
 Github URL
-https://github.com/OngoCoin/OngoCoin
+https://github.com/OverloadedTech/OngoCoin
 
 Advanced properties
 Superblock reward
